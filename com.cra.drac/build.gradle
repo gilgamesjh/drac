@@ -1,0 +1,24 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+archivesBaseName = 'com.cra.drac'
+version = '0.0.1'
+group = 'com.cra'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '2.1.1'
+	compile group: 'javax.servlet', name:'servlet-api', version: '3.0'
+	groovy group: 'org.slf4j', name: 'slf4j-api', version: '1.6.4'
+	groovy "org.codehaus.groovy:groovy-all:2.1.1"
+	testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+
+	// optional dependencies for using Spock
+	testCompile "org.hamcrest:hamcrest-core:1.2" // only necessary if Hamcrest matchers are used
+	testRuntime "cglib:cglib-nodep:2.2"          // allows mocking of classes (in addition to interfaces)
+	testRuntime "org.objenesis:objenesis:1.2"    // allows mocking of classes without default constructor (together with CGLIB)
+}
