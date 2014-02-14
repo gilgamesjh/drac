@@ -1,5 +1,9 @@
 package com.cra.drac.api
 
+import groovy.json.JsonSlurper
+import groovyx.net.http.HTTPBuilder
+import static groovyx.net.http.Method.GET
+import static groovyx.net.http.ContentType.JSON
 import com.cra.drac.interfaces.IDatabase
 import com.cra.drac.interfaces.IDocument
 import com.cra.drac.interfaces.ISession
@@ -17,7 +21,7 @@ class Database implements IDatabase {
 	Database(ISession session, String database){
 		this.session = session
 		this.database = database
-		databasePath = session.serverName()+database+'/api/data/collections'
+		databasePath = session.serverName()+database+'/api/data/collections/'
 	}
 	
 	@Override
@@ -62,7 +66,33 @@ class Database implements IDatabase {
 		}
 		url += "&start=${start}&count=${count}"
 		
+		def slurper = new JsonSlurper()
+		
+		def http = new HTTPBuilder( url )
+		
 		println url
+		
+		http.request(GET,JSON) { req ->
+		   
+			response.success = { resp, reader ->
+			  println "My response handler got response: ${resp.statusLine}"
+			  println "Response length: ${resp.headers.'Content-Length'}"
+			  println reader
+			}
+		   
+			// called only for a 404 (not found) status code:
+			response.'404' = { resp ->
+			  println 'Not found'
+			}
+			
+			http.handler.failure = { resp ->
+				println "Unexpected failure: ${resp.statusLine}"
+			}
+		}
+		
+		//def result = slurper.parse(new URL(url).getContent())
+		
+		//println result
 		
 		return []
 	}
