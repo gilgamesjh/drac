@@ -16,16 +16,16 @@ class Test {
 		def entries = database
 		.view('publications_by_subject')
 		.start(30)
-		.count(10)
+		.count(5)
 		.execute()
 		
 		entries.each { IEntry entry ->
 			String unid = entry['@unid']
 			IDocument doc = database.document().get(unid)
-			println doc.Subject
+			println doc.Body
 		}
 		
-		
+		/*
 		entries = database
 		.query('[Form]="Publication"')
 		.max(10)
@@ -45,7 +45,7 @@ class Test {
 		
 		entries.each { IEntry entry ->
 			println entry.Title
-		}
+		}*/
 	}
 
 }
