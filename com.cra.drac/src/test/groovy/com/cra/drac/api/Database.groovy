@@ -3,17 +3,14 @@ package com.cra.drac.api
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.Method.GET
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.naming.ldap.SortControl;
-
 import com.cra.drac.interfaces.IDatabase
 import com.cra.drac.interfaces.IDocument
 import com.cra.drac.interfaces.IDocumentHandler
+import com.cra.drac.interfaces.IEntry
 import com.cra.drac.interfaces.ISession
 import com.cra.drac.util.DocumentHandler
 import com.cra.drac.util.HttpHandler
+import com.cra.drac.util.PathQueryBuilder
 
 class Database implements IDatabase {
 	ISession session
@@ -80,31 +77,15 @@ class Database implements IDatabase {
 	}
 	
 	@Override
-	public List<IDocument> execute() {
-		// build a url
-		String url = databasePath
-		if(view){
-			url += "collections/name/${view}?compact=true"
-			if(key){
-				url += "&keys=${key}"
-			}
-			if(query){ // ft query inside the view
-				url += "&search=${URLEncoder.encode(query,'UTF-8')}&searchmaxdocs=${max+2}"
-			}
-			if(columnName){
-				url += "&sortcolumn=${columnName}&sortorder=${ascending?'ascending':'descending'}"
-			}
-			url += "&start=${start}&count=${count}"
-		} else if(query){
-			url += "documents?compact=true&search=${URLEncoder.encode(query,'UTF-8')}&searchmaxdocs=${max+2}"
-			if(date){
-				SimpleDateFormat dfe = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-				url += "&since=${dfe.format(date)}"
-			}
-		}
-		reset() // call reset to clear for next call	
-		println url	
-		return new HttpHandler(this).getEntries(url) 
+	public List<IEntry> execute() {
+		return execute(Entry)
+	}
+	
+	public List<IDocument> execute(Class clazz){
+		String url = new PathQueryBuilder(this).build()
+		reset() // call reset to clear for next call
+		println url
+		return new HttpHandler(this).getEntries(url, clazz)
 	}
 
 	@Override
@@ -134,6 +115,35 @@ class Database implements IDatabase {
 	public IDatabase ascending(boolean ascending) {
 		this.ascending = ascending
 		return this
+	}
+
+	@Override
+	public List<IDocument> executeOne() {
+		return executeOne(Document)
+	}
+
+	@Override
+	public List<IDocument> executeOne(Class<?> clazz) {
+		count = 1
+		String url = new PathQueryBuilder(this).build()
+		reset() // call reset to clear for next call
+		println url
+		List<IDocument> entries =new HttpHandler(this).getEntries(url)
+		if(entries && entries.size()>0){
+			return document.get(entries[0].'@unid', clazz)
+		}
+	}
+
+	@Override
+	public List<IDocument> executeMany() {
+		return executeMany(Document)
+	}
+
+	@Override
+	public List<IDocument> executeMany(Class<?> clazz) {
+		return execute().collect{
+			document().get(it.'@unid', clazz)
+		}
 	}
 
 }

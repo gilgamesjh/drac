@@ -23,6 +23,11 @@ class DocumentHandler implements IDocumentHandler{
 	
 	@Override
 	public IDocument get(String unid) {
+		return get(unid, Document)
+	}
+	
+	@Override
+	public IDocument get(String unid, Class<?> clazz) {
 		IDocument document
 		String url = databasePath + unid + '?compact=true&multipart=false&strongtype=true'
 		
@@ -30,7 +35,8 @@ class DocumentHandler implements IDocumentHandler{
 		http.request(GET,JSON) { req ->
 			
 			response.success = { resp, reader ->
-				document = new Document(session, reader)			   
+				document = clazz.newInnstance(session, reader)
+				//document = new Document(session, reader)			   
 			}
 			
 			// called only for a 404 (not found) status code:
@@ -85,5 +91,7 @@ class DocumentHandler implements IDocumentHandler{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }

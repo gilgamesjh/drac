@@ -20,7 +20,7 @@ class HttpHandler {
 		this.database = database
 	}
 	
-	List<IEntry> getEntries(String url){
+	List<IEntry> getEntries(String url, Class clazz){
 		def result = []
 		def http = new HTTPBuilder( session.serverName()+url )
 		http.request(GET,JSON) { req ->
@@ -29,7 +29,11 @@ class HttpHandler {
 				
 				if(reader instanceof ArrayList){
 					 reader.each {
-						 result << new Entry(database, it)
+						 if(clazz.getName()=='Entry'){
+							result << new Entry(database, it)
+						 } else {
+						 	result << clazz.newInstance(database, it)
+						 }
 					 }
 				} 
 			   
@@ -51,13 +55,14 @@ class HttpHandler {
 		return result
 	}
 	
-	IDocument getDocument(String url){
+	IDocument getDocument(String url, Class clazz){
 		IDocument document
 		def http = new HTTPBuilder( session.serverName()+url )
 		http.request(GET,JSON) { req ->
 			
 			response.success = { resp, reader ->
-				document = new Document(session, reader)			   
+				document = clazz.newInstance(session, reader)
+				//document = new Document(session, reader)			   
 			}
 			
 			// called only for a 404 (not found) status code:

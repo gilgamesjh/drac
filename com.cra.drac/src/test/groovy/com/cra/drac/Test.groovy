@@ -22,7 +22,7 @@ class Test {
 		entries.each { IEntry entry ->
 			String unid = entry['@unid']
 			IDocument doc = database.document().get(unid)
-			println doc.Body
+			println doc.Subject
 		}
 		
 		/*
