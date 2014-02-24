@@ -6,7 +6,7 @@ public interface IDocumentHandler {
 	IDocument get(String unid);
 	IDocument get(String unid, Class<?> clazz);
 	void delete();
-	IDocument patch(String unid, Map<String,Object> items);
-	IDocument put(String unid, IDocument document);
-	IDocument put(String unid, Map<String,Object> items);
+	IDocument save(String unid, Map<String,Object> items, Class<?> clazz);
+	IDocument save(IDocument document);
+	IDocument save(String unid, Map<String,Object> items);
 }

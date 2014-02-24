@@ -2,6 +2,7 @@ package com.cra.drac.interfaces;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface IDatabase {
 	/**
@@ -87,14 +88,14 @@ public interface IDatabase {
 	 * Automatically sets the count to 1, but allows start 
 	 * @return Document
 	 */
-	List<IDocument> executeOne();
+	IDocument executeOne();
 	
 	/**
 	 * Same as executeOne(), but allows to override the IDocument to allow for custom types
 	 * @param clazz Class that extends Document
 	 * @return A single IDocument
 	 */
-	List<IDocument> executeOne(Class<?> clazz);
+	IDocument executeOne(Class<?> clazz);
 	
 	/**
 	 * Builds and executes a query, returns a list of IDocuments (Document). This will fetch a matching IDoument for
@@ -122,4 +123,10 @@ public interface IDatabase {
 	 * @return ISession with current session
 	 */
 	ISession getSession();
+	
+	IDocument createDocument();
+	
+	IDocument createDocument(Class<?> clazz);
+	
+	IDocument createDocument(Class<?> clazz, Map<String,Object> initialValue);
 }

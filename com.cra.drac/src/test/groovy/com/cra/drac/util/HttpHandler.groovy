@@ -61,7 +61,7 @@ class HttpHandler {
 		http.request(GET,JSON) { req ->
 			
 			response.success = { resp, reader ->
-				document = clazz.newInstance(session, reader)
+				document = clazz.newInstance(database, reader)
 				//document = new Document(session, reader)			   
 			}
 			

@@ -4,17 +4,20 @@ import groovy.transform.ToString
 
 import org.apache.commons.lang3.StringEscapeUtils
 
+import com.cra.drac.interfaces.IDatabase
 import com.cra.drac.interfaces.IDocument
 import com.cra.drac.interfaces.IEntry
 import com.cra.drac.interfaces.ISession
 
 @ToString
 class Document implements IDocument, IEntry {
-	private ISession session
+	ISession session
+	IDatabase database
 	def rawDocument
 	
-	Document(ISession session, def rawDocument){
-		this.session = session
+	Document(IDatabase database, def rawDocument){
+		this.session = database.getSession()
+		this.database = database
 		this.rawDocument = [:]
 		rawDocument.each { k, v ->
 			if(v instanceof Map){
@@ -38,6 +41,14 @@ class Document implements IDocument, IEntry {
 	def propertyMissing(String name) {
 		return getItemValue(name)
 	}
+	
+	def propertyMissing(String name, value) { 
+		rawDocument[name] = value 
+	}
+	
+	def putAt(String name, value){
+		rawDocument[name] = value
+	}
 
 	@Override
 	public IDocument getDocument() {
@@ -60,5 +71,16 @@ class Document implements IDocument, IEntry {
 			return rawDocument[key]
 		}
 		return null
+	}
+
+	@Override
+	public void replaceValue(String name, Object value) {
+		rawDocument[name] = value
+		
+	}
+
+	@Override
+	public IDocument save() {
+		return database.document().save(this)
 	}
 }

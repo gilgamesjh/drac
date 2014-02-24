@@ -3,6 +3,8 @@ package com.cra.drac.api
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.Method.GET
 
+import java.util.Map;
+
 import com.cra.drac.interfaces.IDatabase
 import com.cra.drac.interfaces.IDocument
 import com.cra.drac.interfaces.IDocumentHandler
@@ -118,19 +120,19 @@ class Database implements IDatabase {
 	}
 
 	@Override
-	public List<IDocument> executeOne() {
+	public IDocument executeOne() {
 		return executeOne(Document)
 	}
 
 	@Override
-	public List<IDocument> executeOne(Class<?> clazz) {
+	public IDocument executeOne(Class<?> clazz) {
 		count = 1
 		String url = new PathQueryBuilder(this).build()
 		reset() // call reset to clear for next call
 		println url
-		List<IDocument> entries =new HttpHandler(this).getEntries(url)
+		List<IDocument> entries =new HttpHandler(this).getEntries(url, Entry)
 		if(entries && entries.size()>0){
-			return document.get(entries[0].'@unid', clazz)
+			return document().get(entries[0].'@unid', clazz)
 		}
 	}
 
@@ -144,6 +146,21 @@ class Database implements IDatabase {
 		return execute().collect{
 			document().get(it.'@unid', clazz)
 		}
+	}
+
+	@Override
+	public IDocument createDocument() {
+		return new Document(this, [:])
+	}
+
+	@Override
+	public IDocument createDocument(Class<?> clazz) {
+		return createDocument(clazz, [:])
+	}
+
+	@Override
+	public IDocument createDocument(Class<?> clazz,	Map<String, Object> initialValue) {
+		return clazz.newInstance(this, initialValue)
 	}
 
 }
