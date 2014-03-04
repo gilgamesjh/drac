@@ -10,6 +10,7 @@ import com.cra.drac.api.Document
 import com.cra.drac.interfaces.IDatabase
 import com.cra.drac.interfaces.IDocument
 import com.cra.drac.interfaces.IDocumentHandler
+import com.cra.drac.interfaces.IRichText;
 import com.cra.drac.interfaces.ISession
 
 class DocumentHandler implements IDocumentHandler{
@@ -89,6 +90,26 @@ class DocumentHandler implements IDocumentHandler{
 			]
 		}
 		println uri.toString()
+		
+		// need to do some converting of the items
+		def data = [:]
+		items.each { k, v  ->
+			if(v instanceof Date){
+				data[k] = [
+					type:"datetime",
+					data:v.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
+				]
+			} else if(v instanceof IRichText){
+				data[k] = [
+					contentType:"text/html",
+					type: v.getType(),
+					data: v.getData()
+				]
+				
+			} else {
+				data[k] = v
+			}
+		}
 				
 		def http = new HTTPBuilder( uri.toString() )
 		http.parser.'application/json' = http.parser.'text/plain'
@@ -98,7 +119,7 @@ class DocumentHandler implements IDocumentHandler{
 			])
 		}
 		http.request(POST, JSON) { req ->
-			body = items
+			body = data
 						
 			response.success = { resp, text ->
 				

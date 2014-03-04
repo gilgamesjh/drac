@@ -1,10 +1,12 @@
 package com.cra.drac.api
 
+import java.text.SimpleDateFormat;
+
 import com.cra.drac.interfaces.ISession
 
 class Session implements ISession {
 	String serverName
-	
+
 	@Override
 	public void login() {
 		// TODO Auto-generated method stub
