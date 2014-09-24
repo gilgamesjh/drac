@@ -162,11 +162,6 @@ class DocumentHandler implements IDocumentHandler{
 		return save(unid, items, Document)
 	}
 
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public IDocument save(String unid, Map<String, Object> items) {
