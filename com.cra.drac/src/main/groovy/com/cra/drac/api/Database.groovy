@@ -148,7 +148,13 @@ class Database implements IDatabase {
 		}
 	}
 
-	@Override
+    @Override
+    int executeCount() {
+        String url = new PathQueryBuilder(this).buildCount()
+        return new HttpHandler(this).getCount(url)
+    }
+
+    @Override
 	public IDocument createDocument() {
 		return new Document(this, [:])
 	}

@@ -5,25 +5,27 @@ import com.cra.drac.api.RichText
 import com.cra.drac.api.Session
 import com.cra.drac.content.Content
 import com.cra.drac.interfaces.IDatabase
+import com.cra.drac.interfaces.IEntry
 import com.cra.drac.interfaces.ISession
 
 class Test {
 
 	static main(args) {
-		ISession session = new Session(serverName:'http://www.foo.bar/')
-		IDatabase database = new Database(session, 'cms/cms.nsf')
+		//ISession session = new Session().serverName('http://www.foo.bar/')
+		//IDatabase database = new Database(session, 'cms/cms.nsf')
+
+        ISession session = new Session().serverName('http://test.foo.bar/')
+        IDatabase database = new Database(session, 'iSite/klepp/kleppk.nsf')
+		
+		int count = database
+		.view('comments_by_parent')
+        .key('4007D78434104A2DC1257D9D004A4606')
+		.executeCount()
+
+        println count
 		
 				
-		
-		
-		/*List<IEntry> docs = database
-		.view('content_by_title')
-		.execute().each { IEntry entry ->
-			println entry.title
-		}*/
-		
-				
-		Content content = database.createDocument(Content, [
+		/*Content content = database.createDocument(Content, [
 			Form:'Content'	
 		])
 		content.status = 'STATUS.Draft'
@@ -34,9 +36,10 @@ class Test {
 		content = content.save()
 		
 		println content.'@unid'
-		
+        */
 		def entries = database
-		.view('content_by_title')
+                .view('comments_by_parent')
+                .key('4007D78434104A2DC1257D9D004A4606')
 		.count(30)
 		.executeMany(Content)
 		
@@ -44,12 +47,11 @@ class Test {
 			println doc.getRawFields()
 		}
 		
-		
-		
-		/*Content content = database.document().get('8C2E5EFA26A70931C1257C89007F9E72', Content)
-		content.title = 'Å hei, vi endrer'
-		content = content.save()
-		println content.getRawFields()*/
+
+		//Content content = database.document().get('8C2E5EFA26A70931C1257C89007F9E72', Content)
+		//content.title = 'Å hei, vi endrer'
+		//content = content.save()
+		//println content.getRawFields()
 		
 		/*
 		entries = database

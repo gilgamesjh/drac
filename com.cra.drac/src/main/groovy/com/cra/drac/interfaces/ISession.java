@@ -1,9 +1,12 @@
 package com.cra.drac.interfaces;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public interface ISession {
-	void login();
-	void login(String userName, String password);
+	ISession login();
+	ISession login(String userName, String password);
 	String getUserName();
 	String serverName();
-	void serverName(String serverName);
+	ISession serverName(String serverName);
+    ObjectMapper getObjectMapper();
 }

@@ -111,7 +111,13 @@ public interface IDatabase {
 	 * @return List of IDocument
 	 */
 	List<IDocument> executeMany(Class<?> clazz);
-	
+
+    /**
+     * Executes the query, but only returns the headers for counting
+     * @return integer with coutn or 0 if not present in result
+     */
+    int executeCount();
+
 	/**
 	 * Current database path
 	 * @return String with database path

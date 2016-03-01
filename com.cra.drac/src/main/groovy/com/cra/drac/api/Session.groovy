@@ -1,22 +1,26 @@
 package com.cra.drac.api
 
-import java.text.SimpleDateFormat;
-
 import com.cra.drac.interfaces.ISession
+import com.fasterxml.jackson.databind.ObjectMapper
 
 class Session implements ISession {
-	String serverName
+	private String serverName
+    private ObjectMapper objectMapper
+
+    Session(){
+        this.objectMapper = new ObjectMapper()
+    }
 
 	@Override
-	public void login() {
+	public ISession login() {
 		// TODO Auto-generated method stub
-		
+		return this
 	}
 
 	@Override
-	public void login(String userName, String password) {
+	public ISession login(String userName, String password) {
 		// TODO Auto-generated method stub
-		
+		return this
 	}
 
 	@Override
@@ -31,8 +35,17 @@ class Session implements ISession {
 	}
 
 	@Override
-	public void serverName(String serverName) {
-		this.serverName = serverName
+	public ISession serverName(String serverName) {
+        if(serverName.endsWith('/')){
+            this.serverName = serverName
+        } else {
+            this.serverName = serverName + '/'
+        }
+        return this
 	}
 
+    @Override
+    ObjectMapper getObjectMapper() {
+        return objectMapper
+    }
 }

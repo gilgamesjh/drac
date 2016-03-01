@@ -1,5 +1,7 @@
 package com.cra.drac.util
 
+import com.cra.drac.ws.UrlFetch
+
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.TEXT
 import static groovyx.net.http.Method.*
@@ -33,7 +35,11 @@ class DocumentHandler implements IDocumentHandler{
 	public IDocument get(String unid, Class<?> clazz) {
 		IDocument document
 		String url = "${databasePath}/unid/${unid}?compact=true&multipart=false&strongtype=true"
-		
+
+        Map result = session.getObjectMapper().readValue(UrlFetch.get(session.serverName()+url), HashMap.class)
+        document = (IDocument)clazz.newInstance(database, result)
+
+        /*
 		def http = new HTTPBuilder( session.serverName()+url )
 		http.request(GET,JSON) { req ->
 			
@@ -50,7 +56,7 @@ class DocumentHandler implements IDocumentHandler{
 			http.handler.failure = { resp ->
 				println "Unexpected failure: ${resp.statusLine}"
 			}
-		}
+		}*/
 		
 		return document
 	}

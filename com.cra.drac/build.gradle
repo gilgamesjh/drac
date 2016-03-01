@@ -16,19 +16,23 @@ buildscript {
 }
 
 archivesBaseName = 'com.cra.drac'
-version = '0.0.2-SNAPSHOT'
+version = '0.0.8'
 group = 'com.cra'
 
 repositories {
 	mavenCentral()
+    maven { url "http://172.16.250.101:8080/nexus/content/groups/public" }
+    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
-	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '2.3.6'
-	groovy group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
-	groovy group: 'org.codehaus.groovy.modules.http-builder', name:'http-builder', version:'0.7'
-	groovy group: 'org.apache.commons', name:'commons-lang3', version:'3.3.2'
-	groovy "org.codehaus.groovy:groovy-all:2.3.6"
+	compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+	compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.5.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
+	compile group: 'org.codehaus.groovy.modules.http-builder', name:'http-builder', version:'0.7'
+	compile group: 'org.apache.commons', name:'commons-lang3', version:'3.3.2'
+    compile 'com.ning:async-http-client:1.9.20' // ws
 	testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
 
 	// optional dependencies for using Spock
@@ -51,7 +55,7 @@ project.ext {
 uploadArchives {
 	repositories {
 	   mavenDeployer {
-			 repository(url: "${nexusServer}/nexus/content/repositories/${lastPart}") {
+			 repository(url: "http://172.16.250.101:8080/nexus/content/repositories/${lastPart}") {
 				 authentication(userName: nexusUsername, password: nexusPassword)
 			 }
 			 pom.version = "${version}"
@@ -60,3 +64,4 @@ uploadArchives {
 	   }
 	}
 }
+

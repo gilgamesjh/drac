@@ -19,21 +19,21 @@ class Document implements IDocument, IEntry {
 		this.session = database.getSession()
 		this.database = database
 		this.rawDocument = [:]
-		rawDocument.each { k, v ->
+		rawDocument.each { String k, v ->
 			if(v instanceof Map){
 				switch(v.type) {
 					case 'datetime':
-						this.rawDocument[k] = new Date().parse("yyyy-MM-dd'T'HH:mm:ss'Z'", v.data)
+						this.rawDocument[k.toLowerCase()] = new Date().parse("yyyy-MM-dd'T'HH:mm:ss'Z'", v.data)
 						break;
 					case 'richtext':
-						this.rawDocument[k] = new RichText(data: StringEscapeUtils.unescapeHtml4(v.data))
+						this.rawDocument[k.toLowerCase()] = new RichText(data: StringEscapeUtils.unescapeHtml4(v.data))
 						break;
 					default:
-						this.rawDocument[k] = v
+						this.rawDocument[k.toLowerCase()] = v
 					
 				}
 			} else {
-				this.rawDocument[k] = v
+				this.rawDocument[k.toLowerCase()] = v
 			}
 		}
 	}

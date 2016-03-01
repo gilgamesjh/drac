@@ -1,0 +1,20 @@
+subprojects {
+    repositories {
+        mavenCentral()
+        maven { url "http://172.16.250.101:8080/nexus/content/groups/public" }
+        maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+}
+
+ext {
+    javaCompilerExecutable = System.env['GROOVY_HOME'] ? System.env['GROOVY_HOME'] + '/bin/groovyc' : 'groovyc'
+    if (!project.hasProperty('groovyVersion')) groovyVersion = '2.3.6'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-XDignore.symbol.file' << '-Xlint:unchecked' << '-Xlint:deprecation'
+    options.debug = true
+    options.fork = true
+    options.forkOptions.executable = javaCompilerExecutable
+    options.warnings = false
+}
