@@ -14,7 +14,10 @@ class UrlFetch {
 
     static String get(String url, int connectTimeout, int requestTimeout){
         AsyncHttpClientConfig cf = new AsyncHttpClientConfig.Builder()
-                .setConnectTimeout(connectTimeout).setRequestTimeout(requestTimeout).build()
+                .setAcceptAnyCertificate(true)
+                .setConnectTimeout(connectTimeout)
+                .setRequestTimeout(requestTimeout)
+                .build()
 
         AsyncHttpClient c = new AsyncHttpClient(cf);
         Future<String> f = c.prepareGet(url).execute(new UrlAsyncHandler<String>());
@@ -28,7 +31,10 @@ class UrlFetch {
 
     static int getCount(String url){
         AsyncHttpClientConfig cf = new AsyncHttpClientConfig.Builder()
-                .setConnectTimeout(WS_CONNECT_TIMEOUT).setRequestTimeout(WS_REQUEST_TIMEOUT).build()
+                .setAcceptAnyCertificate(true)
+                .setConnectTimeout(WS_CONNECT_TIMEOUT)
+                .setRequestTimeout(WS_REQUEST_TIMEOUT)
+                .build()
 
         AsyncHttpClient c = new AsyncHttpClient(cf);
         Future<Integer> f = c.prepareGet(url).execute(new CountAsyncHandler<Integer>());

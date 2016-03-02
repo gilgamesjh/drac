@@ -14,7 +14,7 @@ class Test {
 		//ISession session = new Session().serverName('http://www.foo.bar/')
 		//IDatabase database = new Database(session, 'cms/cms.nsf')
 
-        ISession session = new Session().serverName('http://test.foo.bar/')
+        ISession session = new Session().serverName('https://test.foo.bar/')
         IDatabase database = new Database(session, 'iSite/klepp/kleppk.nsf')
 		
 		int count = database
