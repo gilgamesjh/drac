@@ -30,7 +30,7 @@ class HttpHandler {
 		def result = []
 
         String res = UrlFetch.get(session.serverName()+url)
-        List entries = session.getObjectMapper().readValue(res, ArrayList.class)
+        List entries = session.getObjectMapper().readValue(res?:'[]', ArrayList.class)
         entries.each {
             if(clazz.getName()=='Entry'){
                 result << new Entry(database, it)

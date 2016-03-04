@@ -17,12 +17,14 @@ class Test {
         ISession session = new Session().serverName('https://test.foo.bar/')
         IDatabase database = new Database(session, 'iSite/klepp/kleppk.nsf')
 		
-		int count = database
-		.view('comments_by_parent')
-        .key('4007D78434104A2DC1257D9D004A4606')
-		.executeCount()
+		def routes = database
+		.view('routes')
+        .count(100)
+		.execute()
 
-        println count
+        routes.each {
+            println it
+        }
 		
 				
 		/*Content content = database.createDocument(Content, [
